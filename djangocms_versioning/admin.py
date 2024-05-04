@@ -1304,7 +1304,7 @@ class VersionAdmin(ChangeListActionsMixin, admin.ModelAdmin, metaclass=MediaDefi
 
             extra_context.update(
                 grouper=grouper,
-                title=_('Displaying versions of "{grouper}"').format(grouper=grouper),
+                title=_('Displaying versions of "%(grouper)s"') % {'grouper': force_str(grouper)},
             )
             breadcrumb_opts = self.model._source_model._meta
             extra_context["breadcrumb_opts"] = breadcrumb_opts

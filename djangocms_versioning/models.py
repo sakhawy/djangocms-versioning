@@ -30,8 +30,8 @@ except ImportError:
 
 
 not_draft_error = _("Version is not a draft")
-lock_error_message = _("Action Denied. The latest version is locked by {user}")
-lock_draft_error_message = _("Action Denied. The draft version is locked by {user}")
+lock_error_message = _("Action Denied. The latest version is locked by %(user)s")
+lock_draft_error_message = _("Action Denied. The draft version is locked by %(user)s")
 permission_error_message = _("You do not have permission to perform this action")
 
 def allow_deleting_versions(collector, field, sub_objs, using):
@@ -133,16 +133,17 @@ class Version(models.Model):
         return f"Version #{self.pk}"
 
     def verbose_name(self):
-        return _("Version #{number} ({state} {date})").format(
-            number=self.number,
-            state=dict(constants.VERSION_STATES)[self.state],
-            date=localize(self.created, settings.DATETIME_FORMAT),
-        )
+        return _("Version #%(number)s (%(state)s %(date)s)") % {
+            'number': self.number,
+            'state': dict(constants.VERSION_STATES)[self.state],
+            'date': localize(self.created, settings.DATETIME_FORMAT),
+        }
 
     def short_name(self):
-        return _("Version #{number} ({state})").format(
-            number=self.number, state=dict(constants.VERSION_STATES)[self.state]
-        )
+        return _("Version #%(number)s (%(state)s)") % {
+            'number': self.number,
+            'state': dict(constants.VERSION_STATES)[self.state],
+        }
 
     def locked_message(self):
         if self.locked_by:

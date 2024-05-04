@@ -1,6 +1,7 @@
 import typing
 
 from django.conf import settings
+from django.utils.encoding import force_str
 
 from . import conf
 from .exceptions import ConditionFailed
@@ -54,7 +55,7 @@ def is_not_locked(message: str) -> callable:
     def inner(version, user):
         if conf.LOCK_VERSIONS:
             if not version_is_unlocked_for_user(version, user):
-                raise ConditionFailed(message.format(user=version.locked_by))
+                raise ConditionFailed(message % {'user': force_str(version.locked_by)})
     return inner
 
 
@@ -63,7 +64,7 @@ def draft_is_not_locked(message: str) -> callable:
         if conf.LOCK_VERSIONS:
             draft_version = get_latest_draft_version(version)
             if draft_version and not version_is_unlocked_for_user(draft_version, user):
-                raise ConditionFailed(message.format(user=draft_version.locked_by))
+                raise ConditionFailed(message % {'user': force_str(version.locked_by)})
     return inner
 
 

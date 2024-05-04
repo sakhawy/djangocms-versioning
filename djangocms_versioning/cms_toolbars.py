@@ -21,6 +21,7 @@ from django.contrib.auth import get_permission_codename
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
 from djangocms_versioning.conf import LOCK_VERSIONS
@@ -207,7 +208,7 @@ class VersioningToolbar(PlaceholderToolbar):
             versioning_menu.add_sideframe_item(_("Manage Versions"), url=url)
             # Compare to source menu entry
             if version.source:
-                name = _("Compare to {source}").format(source=_(version.source.short_name()))
+                name = _("Compare to %(source)s") % {'source': _(force_str(version.source.short_name()))}
                 proxy_model = self._get_proxy_model()
                 url = reverse(
                     f"admin:{proxy_model._meta.app_label}_{proxy_model.__name__.lower()}_compare",
